@@ -8,7 +8,15 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
 const Addcar = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [car, setCar] = useState({
+    brand: "",
+    model: "",
+    color: "",
+    fuel: "",
+    year: "",
+    price: ""
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -16,6 +24,14 @@ const Addcar = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleInputChange = event => {
+    setCar({
+      ...car,
+      [event.target.name]: event.target.value
+    });
+    console.log(car);
   };
 
   return (
@@ -35,48 +51,56 @@ const Addcar = () => {
             autoFocus
             margin="dense"
             id="name"
+            name="brand"
+            value={car.brand}
+            onChange={e => handleInputChange(e)}
             label="Brand"
             type="email"
             fullWidth
           />
           <TextField
-            autoFocus
             margin="dense"
             id="name"
+            name="model"
+            value={car.model}
+            onChange={e => handleInputChange(e)}
             label="Model"
-            type="email"
             fullWidth
           />
           <TextField
-            autoFocus
             margin="dense"
             id="name"
+            value={car.color}
+            onChange={e => handleInputChange(e)}
+            name="color"
             label="Color"
-            type="email"
             fullWidth
           />
           <TextField
-            autoFocus
             margin="dense"
             id="name"
+            value={car.year}
+            onChange={e => handleInputChange(e)}
+            name="year"
             label="Year"
-            type="email"
             fullWidth
           />
           <TextField
-            autoFocus
             margin="dense"
             id="name"
+            value={car.fuel}
+            onChange={e => handleInputChange(e)}
+            name="fuel"
             label="Fuel"
-            type="email"
             fullWidth
           />
           <TextField
-            autoFocus
             margin="dense"
+            value={car.price}
+            onChange={e => handleInputChange(e)}
             id="name"
+            name="price"
             label="price (€)"
-            type="email"
             fullWidth
           />
         </DialogContent>
@@ -84,7 +108,7 @@ const Addcar = () => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClickOpen} color="primary">
             Save
           </Button>
         </DialogActions>
