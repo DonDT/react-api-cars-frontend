@@ -4,10 +4,12 @@ import "react-table/react-table.css";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import Addcar from "./Addcar";
+import Editcar from "./Editcar";
 
 const Carlist = () => {
   const [cars, setCars] = useState([]);
   const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchcars();
@@ -28,9 +30,34 @@ const Carlist = () => {
     if (window.confirm("Are you sure you want to delete this car")) {
       fetch(link, { method: "DELETE" })
         .then(res => fetchcars())
+        .then(res => setMessage("Car Deleted"))
         .then(res => setOpen(true))
         .catch(err => console.log(err));
     }
+  };
+
+  const saveCar = newCar => {
+    fetch("https://carstockrest.herokuapp.com/cars", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newCar)
+    })
+      .then(res => fetchcars())
+      .catch(err => console.log(err));
+  };
+
+  const updateCar = (car, link) => {
+    fetch(link, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(car)
+    })
+      .then(res => fetchcars())
+      .catch(err => console.log(err));
   };
   const columns = [
     {
@@ -58,6 +85,14 @@ const Carlist = () => {
       accessor: "price"
     },
     {
+      sortable: false,
+      filterable: false,
+      width: 100,
+      Cell: row => <Editcar car={row.original} updateCar={updateCar} />
+    },
+    {
+      sortable: false,
+      filterable: false,
       accessor: "_links.self.href",
       Cell: ({ value }) => (
         <Button size="small" color="primary" onClick={() => deleteCar(value)}>
@@ -80,7 +115,7 @@ const Carlist = () => {
           ))}
         </tbody>
       </table> */}
-      <Addcar />
+      <Addcar saveCar={saveCar} setOpen={setOpen} />
       <ReactTable
         defaultPageSize={10}
         data={cars}
@@ -96,7 +131,7 @@ const Carlist = () => {
         }}
         autoHideDuration={3000}
         onClose={handleClose}
-        message={<span id="message-id">Success! Car deleted</span>}
+        message={message}
       />
     </div>
   );
