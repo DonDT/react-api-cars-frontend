@@ -5,6 +5,8 @@ import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import Addcar from "./Addcar";
 import Editcar from "./Editcar";
+import { CSVLink, CSVDownload } from "react-csv";
+import Grid from "@material-ui/core/Grid";
 
 const Carlist = () => {
   const [cars, setCars] = useState([]);
@@ -115,7 +117,14 @@ const Carlist = () => {
           ))}
         </tbody>
       </table> */}
-      <Addcar saveCar={saveCar} setOpen={setOpen} />
+      <Grid container>
+        <Grid item>
+          <Addcar saveCar={saveCar} setOpen={setOpen} />
+        </Grid>
+        <Grid item style={{ padding: 15 }}>
+          <CSVLink data={cars}>Export Data</CSVLink>
+        </Grid>
+      </Grid>
       <ReactTable
         defaultPageSize={10}
         data={cars}
